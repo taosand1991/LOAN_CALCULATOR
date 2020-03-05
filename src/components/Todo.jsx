@@ -75,11 +75,11 @@ class Todo extends Component {
         const {errors,loading, selectedValue} = this.state;
         const currency =()=>{
             switch (selectedValue) {
-                case 'Dollars':
+                case 'Dollar':
                     return '$';
                 case 'Naira':
                     return <span>&#8358;</span>;
-                case 'Dirhams':
+                case 'Dirham':
                     return 'AED';
                 case 'Pound':
                     return <span>&#65505;</span>;
@@ -148,9 +148,9 @@ class Todo extends Component {
                    <div className="card card-body">
                        <label className='text-center' htmlFor="validationDefault04">Change Currency</label>
                        <select onChange={this.handleSelect} className='custom-select' name="selectedValue" id="validationDefault04" value={this.state.selectedValue} >
-                           <option>Dollars</option>
+                           <option>Dollar</option>
                            <option>Naira</option>
-                           <option>Dirhams</option>
+                           <option>Dirham</option>
                            <option>Pound</option>
                        </select>
                    </div>
