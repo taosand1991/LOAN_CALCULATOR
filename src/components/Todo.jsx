@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'fontawesome/index.js';
+import '../App.js';
 import Joi from 'joi-browser'
 
 class Todo extends Component {
@@ -77,9 +78,11 @@ class Todo extends Component {
                 case 'Dollars':
                     return '$';
                 case 'Naira':
-                    return '#';
+                    return <span>&#8358;</span>;
                 case 'Dirhams':
                     return 'AED';
+                case 'Pound':
+                    return <span>&#65505;</span>;
                 default:
                     return '$'
             }
@@ -148,6 +151,7 @@ class Todo extends Component {
                            <option>Dollars</option>
                            <option>Naira</option>
                            <option>Dirhams</option>
+                           <option>Pound</option>
                        </select>
                    </div>
                 </div>
