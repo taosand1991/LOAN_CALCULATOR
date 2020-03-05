@@ -11,6 +11,7 @@ class Todo extends Component {
         account:{ principal:'', annualRate:'', noOfPayment: '', },
         errors:{},
         mortgagePayment:'',
+        selectedValue: '',
         loading:false,
     }
 
@@ -20,12 +21,18 @@ class Todo extends Component {
         account[e.target.name] = e.target.value;
         this.setState({account});
     };
+    handleSelect =(e)=>{
+        this.setState({
+            [e.target.name]:e.target.value
+        });
+        console.log(this.state.selectedValue)
+    };
     handleData =()=>{
        const {principal, noOfPayment, annualRate } = this.state.account;
         const monthInterestRate = annualRate/12/100;
         const paymentNumber = noOfPayment * 12;
-        const mortgagePayment = ((principal * monthInterestRate * Math.pow(1 + monthInterestRate, paymentNumber))/
-            (Math.pow(1 + monthInterestRate, paymentNumber)-1)).toFixed(2);
+        const mortgagePayment = (((principal * monthInterestRate * Math.pow(1 + monthInterestRate, paymentNumber))/
+            (Math.pow(1 + monthInterestRate, paymentNumber)-1)).toLocaleString());
 
         this.setState({mortgagePayment});
 
@@ -40,7 +47,6 @@ class Todo extends Component {
 
 
     handleSubmit =(e)=>{
-        const {loading} = this.state;
         e.preventDefault();
         const errors = this.validate();
         this.setState({errors:errors || {}});
@@ -48,7 +54,7 @@ class Todo extends Component {
          const account = {...this.state.account};
         account[e.target.name] = '';
         this.setState({account:{annualRate:'', principal:'', noOfPayment:''}});
-        this.setState({loading:true})
+        this.setState({loading:true});
     setTimeout(() =>{
        this.setState({loading:false})
     },1000)
@@ -65,7 +71,21 @@ class Todo extends Component {
        };
 
     render() {
-    const {errors,loading} = this.state;
+        const {errors,loading, selectedValue} = this.state;
+        const currency =()=>{
+            switch (selectedValue) {
+                case 'Dollars':
+                    return '$';
+                case 'Naira':
+                    return '#';
+                case 'Dirhams':
+                    return 'AED';
+                default:
+                    return '$'
+            }
+            };
+
+
         return (
            <React.Fragment>
                <div className='row mt-3'>
@@ -76,7 +96,9 @@ class Todo extends Component {
                     {loading && <span className='fa fa-refresh fa-spin'/>}
                     <div className='form-group input-group mb-2'>
                         <div className="input-group-prepend">
-                            <div className="input-group-text bg-danger text-white">$</div>
+                            <div className="input-group-text bg-danger text-white">
+                                {currency()}
+                                </div>
                         </div>
                 <input onChange={this.handleChange} className='form-control' type="text"
                        placeholder={'Enter your Loan Amount'} name='principal' value={this.state.account.principal}
@@ -103,7 +125,7 @@ class Todo extends Component {
                         {errors.noOfPayment &&
                <div className='alert alert-danger input-group'>{errors.noOfPayment}</div>}
                 </div>
-                    <button className='btn btn-primary btn-block'>Check
+                    <button className='btn btn-primary btn-block' disabled={loading}>Check
                         {loading && <span className='fa fa-refresh fa-spin'/>}
                     </button>
                     </form>
@@ -111,7 +133,7 @@ class Todo extends Component {
                 <form >
                     <div className='form-group input-group mb-2'>
                         <div className='input-group-prepend'>
-                        <div className='input-group-text'>$</div>
+                        <div className='input-group-text'>{currency()}</div>
                             </div>
                         <input onChange={this.handleChange} className='form-control' type="text" placeholder='Monthly Mortgage Payment'
                                value={this.state.mortgagePayment} disabled={this.state.mortgagePayment === '' || null}/>
@@ -119,7 +141,16 @@ class Todo extends Component {
                 </form>
                 </div>
                 </div>
-
+                <div className="col-md-2">
+                   <div className="card card-body">
+                       <label className='text-center' htmlFor="validationDefault04">Change Currency</label>
+                       <select onChange={this.handleSelect} className='custom-select' name="selectedValue" id="validationDefault04" value={this.state.selectedValue} >
+                           <option>Dollars</option>
+                           <option>Naira</option>
+                           <option>Dirhams</option>
+                       </select>
+                   </div>
+                </div>
             </div>
                </React.Fragment>
         );
